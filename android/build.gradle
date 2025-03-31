@@ -25,6 +25,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+    namespace "com.thesparks.android_pip"
     compileSdkVersion 31
 
     compileOptions {
