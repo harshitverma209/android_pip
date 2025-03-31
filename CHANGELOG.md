@@ -21,3 +21,8 @@
 ## 2.0.0
 * Made it easier to implement callbacks.
 * BREAKING CHANGE!
+
+## 2.0.1
+* Added support for namespace
+* Upgraded gradle to support JDK 21
+* Bug Fixes in Example

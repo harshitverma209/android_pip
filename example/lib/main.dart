@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:android_pip/actions/pip_action.dart';
 import 'package:android_pip/actions/pip_actions_layout.dart';
@@ -63,8 +65,8 @@ class _ExampleAppState extends State<ExampleApp> {
     return PipActionsLayout.values
         .map<DropdownMenuItem<PipActionsLayout>>(
           (PipActionsLayout value) => DropdownMenuItem<PipActionsLayout>(
-            child: Text(value.name),
             value: value,
+            child: Text(value.name),
           ),
         )
         .toList();
@@ -77,18 +79,18 @@ class _ExampleAppState extends State<ExampleApp> {
       home: PipWidget(
         // builder is null so child is used when not in pip mode
         onPipMaximised: () {
-          print("PIP To APP");
+          log("PIP To APP");
         },
         onPipExited: () {
-          print("Exited from PIP");
+          log("Exited from PIP");
         },
         onPipEntered: () {
-          print("App to PIP");
+          log("App to PIP");
         },
         // useIndexedStack: false,
         pipLayout: pipActionsLayout,
         onPipAction: (action) {
-          print("PIP ACTION TAP: " + action.name);
+          log("PIP ACTION TAP: ${action.name}");
           switch (action) {
             case PipAction.play:
               // example: videoPlayerController.play();
@@ -126,6 +128,34 @@ class _ExampleAppState extends State<ExampleApp> {
               break;
           }
         },
+        // pip builder is null so pip child is used when in pip mode
+        pipChild: Scaffold(
+          appBar: AppBar(
+            title: const Text('Pip Mode'),
+          ),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(width: double.infinity),
+              const Text('Pip activated'),
+              pipActionsLayout != PipActionsLayout.none
+                  ? IconButton(
+                      onPressed: () {
+                        bool newValue = !isPlaying;
+                        pip.setIsPlaying(newValue);
+                        setState(() {
+                          isPlaying = newValue;
+                        });
+                      },
+                      icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow))
+                  : Container(),
+              pipActionsLayout != PipActionsLayout.none
+                  ? Text(actionResponse)
+                  : Container(),
+            ],
+          ),
+        ),
         child: Scaffold(
           appBar: AppBar(
             title: const Text('Pip Plugin example app'),
@@ -154,8 +184,8 @@ class _ExampleAppState extends State<ExampleApp> {
                 items: aspectRatios
                     .map<DropdownMenuItem<List<int>>>(
                       (List<int> value) => DropdownMenuItem<List<int>>(
-                        child: Text('${value.first} : ${value.last}'),
                         value: value,
+                        child: Text('${value.first} : ${value.last}'),
                       ),
                     )
                     .toList(),
@@ -171,6 +201,11 @@ class _ExampleAppState extends State<ExampleApp> {
                             setState(() {
                               autoPipSwitch = newValue;
                             });
+                            pip.setAutoPipMode(
+                              aspectRatio: aspectRatio,
+                              autoEnter: autoPipSwitch,
+                              seamlessResize: true,
+                            );
                           }
                         : null,
                   ),
@@ -244,34 +279,6 @@ class _ExampleAppState extends State<ExampleApp> {
                         )
                       ],
                     )
-                  : Container(),
-            ],
-          ),
-        ),
-        // pip builder is null so pip child is used when in pip mode
-        pipChild: Scaffold(
-          appBar: AppBar(
-            title: const Text('Pip Mode'),
-          ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(width: double.infinity),
-              const Text('Pip activated'),
-              pipActionsLayout != PipActionsLayout.none
-                  ? IconButton(
-                      onPressed: () {
-                        bool newValue = !isPlaying;
-                        pip.setIsPlaying(newValue);
-                        setState(() {
-                          isPlaying = newValue;
-                        });
-                      },
-                      icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow))
-                  : Container(),
-              pipActionsLayout != PipActionsLayout.none
-                  ? Text(actionResponse)
                   : Container(),
             ],
           ),
