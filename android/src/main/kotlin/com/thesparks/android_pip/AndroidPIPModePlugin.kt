@@ -106,6 +106,7 @@ class AndroidPIPModePlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         try {
           actionsLayout = PipActionsLayout.valueOf(it.uppercase())
           actions = actionsLayout.remoteActions(context)
+          renderPipActions()
           true
         } catch(e: Exception) {
           false
