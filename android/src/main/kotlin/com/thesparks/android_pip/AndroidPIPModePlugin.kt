@@ -178,9 +178,11 @@ class AndroidPIPModePlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   @RequiresApi(Build.VERSION_CODES.O)
   private fun renderPipActions() {
     actions = PipActionsLayout.remoteActions(context, actionsLayout.actions)
-    params?.let {
-      it.setActions(actions).build()
-      activity.setPictureInPictureParams(it.build())
+    if (!::activity.isInitialized) return
+    if (params == null) {
+      params = PictureInPictureParams.Builder()
     }
+    params!!.setActions(actions)
+    activity.setPictureInPictureParams(params!!.build())
   }
 }
