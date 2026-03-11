@@ -26,3 +26,8 @@
 * Added support for namespace
 * Upgraded gradle to support JDK 21
 * Bug Fixes in Example
+
+## 2.0.2
+* Updated Kotlin version to 2.1.0
+* Fixed example app.
+* Fixed a bug where setPipActionsLayout didn't render new actions without calling setAutoPipMode.
