@@ -52,7 +52,7 @@ class AndroidPIPModePlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     broadcastReceiver = object : BroadcastReceiver() {
       @RequiresApi(Build.VERSION_CODES.O)
       override fun onReceive(context: Context, intent: Intent) {
-        if (SIMPLE_PIP_ACTION !== intent.action) {
+        if (SIMPLE_PIP_ACTION != intent.action) {
           return
         }
         intent.getStringExtra(EXTRA_ACTION_TYPE)?.let {
@@ -105,6 +105,7 @@ class AndroidPIPModePlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       val success = call.argument<String>("layout")?.let {
         try {
           actionsLayout = PipActionsLayout.valueOf(it.uppercase())
+          actionsLayout.resetActions()
           actions = actionsLayout.remoteActions(context)
           renderPipActions()
           true

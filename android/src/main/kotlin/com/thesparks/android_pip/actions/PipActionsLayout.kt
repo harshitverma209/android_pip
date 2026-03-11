@@ -6,17 +6,24 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 
 enum class PipActionsLayout(
-    var actions: MutableList<PipAction>
+    private val defaultActions: List<PipAction>
 ) {
-    NONE(mutableListOf()),
-    MEDIA(mutableListOf(PipAction.PREVIOUS, PipAction.PAUSE, PipAction.NEXT)),
-    MEDIA_ONLY_PAUSE(mutableListOf(PipAction.PAUSE)),
-    MEDIA_LIVE(mutableListOf(PipAction.LIVE, PipAction.PAUSE)),
-    MEDIA_WITH_SEEK_10(mutableListOf(PipAction.REWIND,PipAction.PAUSE, PipAction.FORWARD));
+    NONE(emptyList()),
+    MEDIA(listOf(PipAction.PREVIOUS, PipAction.PAUSE, PipAction.NEXT)),
+    MEDIA_ONLY_PAUSE(listOf(PipAction.PAUSE)),
+    MEDIA_LIVE(listOf(PipAction.LIVE, PipAction.PAUSE)),
+    MEDIA_WITH_SEEK_10(listOf(PipAction.REWIND, PipAction.PAUSE, PipAction.FORWARD));
+
+    var actions: MutableList<PipAction> = defaultActions.toMutableList()
+        private set
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun remoteActions(context: Context): MutableList<RemoteAction> =
         remoteActions(context, actions)
+
+    fun resetActions() {
+        actions = defaultActions.toMutableList()
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun toggleToAfterAction(pipAction: PipAction) {
